@@ -1,0 +1,10 @@
+.gradle
+/out/
+/generated/
+/src/
+
+### IntelliJ IDEA ###
+.idea
+*.iws
+*.iml
+*.ipr

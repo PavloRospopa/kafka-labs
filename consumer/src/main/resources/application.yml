@@ -1,0 +1,11 @@
+server:
+  port: 8082
+
+spring:
+  kafka:
+    consumer:
+      group-id: consumer
+      auto-offset-reset: earliest
+
+application:
+  consumer-topic: filtered-play-events

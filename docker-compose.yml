@@ -1,0 +1,40 @@
+version: '2'
+
+services:
+  zookeeper:
+    image: wurstmeister/zookeeper
+    ports:
+      - "2181:2181"
+
+  kafka:
+    image: wurstmeister/kafka
+    ports:
+      - "9092:9092"
+    depends_on: 
+      - zookeeper
+    environment:
+      KAFKA_ADVERTISED_LISTENERS: PLAINTEXT://kafka:9092
+      KAFKA_LISTENERS: PLAINTEXT://0.0.0.0:9092
+      KAFKA_ZOOKEEPER_CONNECT: zookeeper:2181
+      KAFKA_CREATE_TOPICS: "play-events:1:1,filtered-play-events:1:1"
+  
+  producer:
+    image: producer
+    depends_on:
+      - kafka
+    environment:
+      SPRING_KAFKA_BOOTSTRAP-SERVERS: kafka:9092
+  
+  transformer:
+    image: transformer
+    depends_on:
+      - producer
+    environment:
+      SPRING_KAFKA_BOOTSTRAP-SERVERS: kafka:9092  
+  
+  consumer:
+    image: consumer
+    depends_on:
+      - transformer
+    environment:
+      SPRING_KAFKA_BOOTSTRAP-SERVERS: kafka:9092
